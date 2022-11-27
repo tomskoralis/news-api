@@ -6,7 +6,6 @@ use Carbon\Carbon;
 
 class Article
 {
-
     private string $source;
     private string $author;
     private string $title;
@@ -14,18 +13,23 @@ class Article
     private string $url;
     private string $urlToImage;
     private string $publishedAt;
-    private string $content;
+//    private string $content;
 
     public function __construct(\stdClass $article)
     {
         $this->source = $article->source->name ?? "";
         $this->author = $article->author ?? "";
         $this->title = $article->title ?? "";
+        $article->description = preg_replace("/<(.*?)>/", "", $article->description);
+        $article->description = preg_replace("/(http)\S+/", "", $article->description);
         $this->description = $article->description ?? "";
         $this->url = $article->url ?? "";
         $this->urlToImage = $article->urlToImage ?? "";
+        $article->publishedAt = Carbon::parse($article->publishedAt)->isoFormat('HH:mm D/M/YYYY');
         $this->publishedAt = $article->publishedAt ?? "";
-        $this->content = $article->content ?? "";
+//        $article->content = preg_replace("/<(.*?)>/", "", $article->content);
+//        $article->content = preg_replace("/(http)\S+/", "", $article->content);
+//        $this->content = $article->content ?? "";
     }
 
     public function getSource(): string
@@ -45,8 +49,6 @@ class Article
 
     public function getDescription(): string
     {
-        $this->description = preg_replace("/<(.*?)>/", "", $this->description);
-        $this->description = preg_replace('/(http)\S+/', '', $this->description);
         return $this->description;
     }
 
@@ -62,13 +64,11 @@ class Article
 
     public function getPublishedAt(): string
     {
-        return Carbon::parse($this->publishedAt)->isoFormat('HH:mm D/M/YYYY');
+        return $this->publishedAt;
     }
 
-    public function getContent(): string
-    {
-        $this->content = preg_replace("/<(.*?)>/", "", $this->content);
-        $this->content = preg_replace('/(http)\S+/', '', $this->content);
-        return $this->content;
-    }
+//    public function getContent(): string
+//    {
+//        return $this->content;
+//    }
 }
