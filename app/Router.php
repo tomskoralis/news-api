@@ -34,7 +34,7 @@ class Router
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
                 try {
-                    echo $twig->render('404.twig');
+                    echo $twig->render('templates/404.twig');
                 } catch (LoaderError $e) {
                     echo "Twig Loader Error: " . $e->getMessage();
                 } catch (RuntimeError $e) {
@@ -46,7 +46,7 @@ class Router
             case Dispatcher::METHOD_NOT_ALLOWED:
 //                $allowedMethods = $routeInfo[1];
                 try {
-                    echo $twig->render('405.twig');
+                    echo $twig->render('templates/405.twig');
                 } catch (LoaderError $e) {
                     echo "Twig Loader Error: " . $e->getMessage();
                 } catch (RuntimeError $e) {

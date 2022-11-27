@@ -2,7 +2,6 @@
 
 namespace App;
 
-use Carbon\Carbon;
 use Dotenv\Dotenv;
 use Dotenv\Exception\ValidationException;
 use GuzzleHttp\Exception\ClientException;

@@ -17,7 +17,7 @@ class SearchResultsController
             if ($searchText) {
                 $articles = $newsApi->searchUsingApi($searchText, $page);
                 $errorMessage = $newsApi->getErrorMessage();
-                echo $twig->render('index.twig', array(
+                echo $twig->render('templates/search.twig', array(
                     'searchText' => $searchText,
                     'articles' => $articles,
                     'page' => $page,
@@ -25,7 +25,7 @@ class SearchResultsController
                     'errorMessage' => $errorMessage
                 ));
             } else {
-                echo $twig->render('index.twig');
+                echo $twig->render('base.twig');
             }
         } catch (LoaderError $e) {
             echo "Twig Loader Error: " . $e->getMessage();

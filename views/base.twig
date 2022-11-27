@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>&#128478{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="/styles/styles.css">
+</head>
+<body>
+<div id="container">
+
+    <div id="top">
+        <div id="headerText">News API</div>
+        <div id="searchFormContainer">
+            <form id="searchForm" action="/" method="get">
+                <input required id="searchInput" type="text" name="search" placeholder="Search"
+                        {% if searchText %} value="{{ searchText }}"{% endif %}>
+                <input type="hidden" name="page" value="1">
+                <button class="submitButton">Search</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <div id="end">
+        {% block footer %}{% endblock %}
+    </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+{% extends 'base.twig' %}
+
+{% block title %}News API{% if searchText %} search: "{{ searchText }}" page {{ page }}{% endif %}{% endblock %}
+
+{% block content %}
+    {% if searchText %}
+        {% if errorMessage %}
+            <pre>{{ errorMessage }}</pre>
+        {% else %}
+            <div class="articleProperties">Page {{ page }}
+                of {{ (articles.getTotalResults/pageSize)|round(0, 'ceil') }}.
+                Found {{ articles.getTotalResults }} articles
+            </div>
+            {% for article in articles.getArticles %}
+                <div class="article">
+                    <div><a href="{{ article.getUrl }}">{{ article.getTitle }}</a></div>
+                    <div class="articleProperties">Posted
+                        {% if article.getSource %} on {{ article.getSource }} {% endif %}
+                        {% if article.getAuthor %} by {{ article.getAuthor }} {% endif %}
+                        {% if article.getPublishedAt %} at {{ article.getPublishedAt }} {% endif %}
+                    </div>
+                    <div class="descriptionRow">
+                        <div class="descriptionColumn">{{ article.getDescription }}</div>
+                        {% if article.getUrlToImage %}
+                            <div class="imageColumn">
+                                <img class="articleImage" src='{{ article.getUrlToImage }}' alt=''>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block footer %}
+    {% if articles.getTotalResults > pageSize %}
+        <div id="pageFormContainer">
+            <form id="pageForm" action="/" method="get">
+                <input type="hidden" name="search" value="{{ searchText }}">
+                <label for="pageInput">Page: </label>
+                <input required id="pageInput" type="text" name="page"
+                       placeholder="{{ page }} of {{ (articles.getTotalResults/pageSize)|round(0, 'ceil') }}">
+                <button class="submitButton">Go</button>
+            </form>
+        </div>
+    {% endif %}
+{% endblock %}

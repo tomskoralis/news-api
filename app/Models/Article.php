@@ -46,7 +46,7 @@ class Article
     public function getDescription(): string
     {
         $this->description = preg_replace("/<(.*?)>/", "", $this->description);
-//        $this->description = preg_replace('/(http)\S+/', '', $this->description);
+        $this->description = preg_replace('/(http)\S+/', '', $this->description);
         return $this->description;
     }
 
@@ -68,7 +68,7 @@ class Article
     public function getContent(): string
     {
         $this->content = preg_replace("/<(.*?)>/", "", $this->content);
-//        $this->content = preg_replace('/(http)\S+/', '', $this->content);
+        $this->content = preg_replace('/(http)\S+/', '', $this->content);
         return $this->content;
     }
 }
