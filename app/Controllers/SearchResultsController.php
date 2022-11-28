@@ -9,7 +9,7 @@ use const App\PAGE_SIZE;
 
 class SearchResultsController
 {
-    public function index(Environment $twig, ApiAccess $newsApi): void
+    public function index(Environment $twig, ApiAccess $newsApi): ?string
     {
         $searchText = $_GET["search"] ?? "";
         $page = (isset($_GET["page"]) && (int)$_GET["page"] > 0) ? (int)$_GET["page"] : 1;
@@ -17,7 +17,7 @@ class SearchResultsController
             if ($searchText) {
                 $articles = $newsApi->searchUsingApi($searchText, $page);
                 $errorMessage = $newsApi->getErrorMessage();
-                echo $twig->render('templates/search.twig', array(
+                return $twig->render('templates/search.twig', array(
                     'searchText' => $searchText,
                     'articles' => $articles,
                     'page' => $page,
@@ -25,7 +25,7 @@ class SearchResultsController
                     'errorMessage' => $errorMessage
                 ));
             } else {
-                echo $twig->render('base.twig');
+                return $twig->render('base.twig');
             }
         } catch (LoaderError $e) {
             echo "Twig Loader Error: " . $e->getMessage();
@@ -34,5 +34,6 @@ class SearchResultsController
         } catch (SyntaxError $e) {
             echo "Twig Syntax Error: " . $e->getMessage();
         }
+        return null;
     }
 }

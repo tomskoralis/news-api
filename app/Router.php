@@ -59,7 +59,7 @@ class Router
                 $handler = $routeInfo[1];
 //                $vars = $routeInfo[2];
                 [$controller, $method] = $handler;
-                (new $controller)->$method($twig, $newsApi);
+                echo (new $controller)->$method($twig, $newsApi);
                 break;
         }
     }
