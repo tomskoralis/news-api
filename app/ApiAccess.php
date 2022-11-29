@@ -2,10 +2,10 @@
 
 namespace App;
 
+use App\Models\Collections\ArticlesCollection;
 use Dotenv\Dotenv;
 use Dotenv\Exception\ValidationException;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerException;
+use GuzzleHttp\Exception\{ClientException, ServerException};
 use jcobhams\NewsApi\{NewsApi, NewsApiException};
 
 class ApiAccess
@@ -32,7 +32,7 @@ class ApiAccess
         return $this->errorMessage;
     }
 
-    public function searchUsingApi(string $searchText, int $page = 1): ?Articles
+    public function searchUsingApi(string $searchText, int $page = 1): ?ArticlesCollection
     {
         if (isset($this->newsApi) && $searchText != "") {
             try {
@@ -48,7 +48,6 @@ class ApiAccess
                     PAGE_SIZE,
                     $page
                 );
-//                echo "</pre>"; var_dump($articles->articles); die;
             } catch (NewsApiException $e) {
                 $this->errorMessage = "News Api Exception: " . $e->getMessage();
                 return null;
@@ -60,7 +59,7 @@ class ApiAccess
                 return null;
             }
             if (isset($articles) && $articles->articles !== []) {
-                return new Articles($articles->articles, $articles->totalResults);
+                return new ArticlesCollection($articles->articles, $articles->totalResults);
             } else {
                 $this->errorMessage = "No articles found";
             }

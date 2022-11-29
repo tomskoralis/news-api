@@ -12,14 +12,12 @@ class Router
 {
     private Dispatcher $dispatcher;
     private Environment $twig;
-    private ApiAccess $newsApi;
 
     public function __construct()
     {
-        $this->newsApi = new ApiAccess();
-        $this->twig = new Environment(new FilesystemLoader('views'));
+        $this->twig = new Environment(new FilesystemLoader('../views'));
         $this->dispatcher = simpleDispatcher(function (RouteCollector $route) {
-            $route->addRoute('GET', '/', ['App\Controllers\SearchResultsController', 'index']);
+            $route->addRoute('GET', '/', ['App\Controllers\ArticlesController', 'index']);
         });
     }
 
@@ -31,7 +29,6 @@ class Router
             $uri = substr($uri, 0, $pos);
         }
         $uri = rawurldecode($uri);
-
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
@@ -59,9 +56,18 @@ class Router
                 break;
             case Dispatcher::FOUND:
                 $handler = $routeInfo[1];
-//                $vars = $routeInfo[2];
+                $vars = $routeInfo[2];
                 [$controller, $method] = $handler;
-                echo (new $controller)->$method($this->twig, $this->newsApi);
+                $response = (new $controller)->{$method}($vars);
+                try {
+                    echo $this->twig->render($response->getPath(), $response->getParameters());
+                } catch (LoaderError $e) {
+                    echo "Twig Loader Error: " . $e->getMessage();
+                } catch (RuntimeError $e) {
+                    echo "Twig Runtime Error: " . $e->getMessage();
+                } catch (SyntaxError $e) {
+                    echo "Twig Syntax Error: " . $e->getMessage();
+                }
                 break;
         }
     }

@@ -8,8 +8,8 @@
             <pre>{{ errorMessage }}</pre>
         {% else %}
             <div class="articleProperties">Page {{ page }}
-                of {{ (articles.getTotalResults/pageSize)|round(0, 'ceil') }}.
-                Found {{ articles.getTotalResults }} articles
+                of {{ (articles.articleCount/pageSize)|round(0, 'ceil') }}.
+                Found {{ articles.articleCount }} articles
             </div>
             {% for article in articles.getArticles %}
                 <div class="article">
@@ -34,13 +34,13 @@
 {% endblock %}
 
 {% block footer %}
-    {% if articles.getTotalResults > pageSize %}
+    {% if articles.articleCount > pageSize %}
         <div id="pageFormContainer">
             <form id="pageForm" action="/" method="get">
                 <input type="hidden" name="search" value="{{ searchText }}">
                 <label for="pageInput">Page: </label>
                 <input required id="pageInput" type="text" name="page"
-                       placeholder="{{ page }} of {{ (articles.getTotalResults/pageSize)|round(0, 'ceil') }}">
+                       placeholder="{{ page }} of {{ (articles.articleCount/pageSize)|round(0, 'ceil') }}">
                 <button class="submitButton">Go</button>
             </form>
         </div>
