@@ -8,7 +8,6 @@
     - `id` must auto-increment and `email` must be unique to the table.
 4. Put your `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_DRIVER` in the `.env`
    file.
-    - Database `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD` are required.
-    - Database `DATABASE_HOST` is localhost by default and `DATABASE_DRIVER` is pdo_mysql by default if nothing is
-      between the `""`.
+    - `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD` are all required.
+    - `DATABASE_HOST` is localhost by default and `DATABASE_DRIVER` is pdo_mysql by default.
 5. Run the website from the `public` directory.
