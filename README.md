@@ -1,2 +1,14 @@
 # news-api
-Put your newsapi.org API key in the `.env` file like it is shown in the `.env.example`
+
+### Instructions to run the News API website:
+
+1. Copy the `.env.example` and rename it to `.env`.
+2. Put your newsapi.org API key between the `""` in the same line as `NEWS_API_KEY`.
+3. Create a new database that has users table with `id`, `name`, `email`, and `password` columns.
+    - `id` must auto-increment and `email` must be unique to the table.
+4. Put your `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_DRIVER` in the `.env`
+   file.
+    - Database `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD` are required.
+    - Database `DATABASE_HOST` is localhost by default and `DATABASE_DRIVER` is pdo_mysql by default if nothing is
+      between the `""`.
+5. Run the website from the `public` directory.

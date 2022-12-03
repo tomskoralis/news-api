@@ -19,9 +19,7 @@ class Article
         $this->source = $article->source->name ?? "";
         $this->author = $article->author ?? "";
         $this->title = $article->title ?? "";
-        $article->description = preg_replace("/<(.*?)>/", "", $article->description);
-        $article->description = preg_replace("/(http)\S+/", "", $article->description);
-        $this->description = $article->description ?? "";
+        $this->description = strip_tags($article->description) ?? "";
         $this->url = $article->url ?? "";
         $this->urlToImage = $article->urlToImage ?? "";
         $this->publishedAt = $article->publishedAt ?? "";
@@ -59,6 +57,6 @@ class Article
 
     public function getPublishedAt(): string
     {
-        return Carbon::parse($this->publishedAt)->isoFormat('HH:mm D/M/YYYY');
+        return Carbon::parse($this->publishedAt)->isoFormat("HH:mm D/M/YYYY");
     }
 }

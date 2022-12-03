@@ -1,0 +1,70 @@
+{% extends 'base.twig' %}
+
+{% block title %}| Account{% endblock %}
+
+{% block content %}
+
+    <div class="userInputFormContainer">
+        <div class="pageTitle">Edit Account</div>
+        <form class="userInputForm" action="/update" method="post">
+            <label class="userInputBoxLabel">Username:<br>
+                <input class="userInputBox" type="text" name="name" value="{{ name }}">
+            </label><br>
+            <label class="userInputBoxLabel">E-mail:<br>
+                <input class="userInputBox" type="email" name="email" value="{{ email }}">
+            </label><br>
+            <label class="userInputBoxLabel">Enter password to confirm:<br>
+                <input required class="userInputBox password" name="password" type="password">
+            </label><br>
+            <div class="registerButtonContainer">
+                <button class="submitButton">Save</button>
+            </div>
+        </form>
+        {% if updateErrorMessage %}
+            <div class="userInputError">
+                ERROR: {{ updateErrorMessage }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="userInputFormContainer">
+        <div class="pageTitle">Change Password</div>
+        <form class="userInputForm" action="/update-password" method="post">
+            <label class="userInputBoxLabel">Current password:<br>
+                <input required class="userInputBox password" name="passwordCurrent" type="password">
+            </label><br>
+            <label class="userInputBoxLabel">New password:<br>
+                <input required class="userInputBox password" name="passwordNew" type="password">
+            </label><br>
+            <label class="userInputBoxLabel">Repeat new password:<br>
+                <input required class="userInputBox password" name="passwordNewRepeated" type="password">
+            </label><br>
+            <div class="registerButtonContainer">
+                <button class="submitButton">Save</button>
+            </div>
+        </form>
+        {% if passwordErrorMessage %}
+            <div class="userInputError">
+                ERROR: {{ passwordErrorMessage }}
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="userInputFormContainer">
+        <div class="pageTitle">Delete Account </div>
+        <form class="userInputForm" action="/delete" method="post">
+            <label class="userInputBoxLabel">Enter password to confirm:<br>
+                <input required class="userInputBox password" name="passwordForDeletion" type="password">
+            </label><br>
+            <div class="registerButtonContainer">
+                <button class="submitButton dangerButton">Delete Account</button>
+            </div>
+        </form>
+        {% if deleteErrorMessage %}
+            <div class="userInputError">
+                ERROR: {{ deleteErrorMessage }}
+            </div>
+        {% endif %}
+    </div>
+
+{% endblock %}

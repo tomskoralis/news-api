@@ -1,36 +1,39 @@
 {% extends 'base.twig' %}
 
-{% block title %}News API{% if searchText %} search: "{{ searchText }}" page {{ page }}{% endif %}{% endblock %}
+{% block title %}
+    {% if searchText %}
+        | search: {{ searchText }} page {{ page }}
+    {% endif %}
+{% endblock %}
+
+{% block topBarRight %}
+    {% if searchText and not errorMessage %}
+        <div id="searchResultCount">Page {{ page }}
+            of {{ (articles.articleCount/pageSize)|round(0, 'ceil') }}.
+            Found {{ articles.articleCount }} articles
+        </div>
+    {% endif %}
+{% endblock %}
 
 {% block content %}
-    {% if searchText %}
-        {% if errorMessage %}
-            <pre>{{ errorMessage }}</pre>
-        {% else %}
-            <div class="articleProperties">Page {{ page }}
-                of {{ (articles.articleCount/pageSize)|round(0, 'ceil') }}.
-                Found {{ articles.articleCount }} articles
+    {% for article in articles.getArticles %}
+        <div class="article">
+            <div><a href="{{ article.getUrl }}">{{ article.getTitle }}</a></div>
+            <div class="articleProperties">Posted
+                {% if article.getSource %} on {{ article.getSource }} {% endif %}
+                {% if article.getAuthor %} by {{ article.getAuthor }} {% endif %}
+                {% if article.getPublishedAt %} at {{ article.getPublishedAt }} {% endif %}
             </div>
-            {% for article in articles.getArticles %}
-                <div class="article">
-                    <div><a href="{{ article.getUrl }}">{{ article.getTitle }}</a></div>
-                    <div class="articleProperties">Posted
-                        {% if article.getSource %} on {{ article.getSource }} {% endif %}
-                        {% if article.getAuthor %} by {{ article.getAuthor }} {% endif %}
-                        {% if article.getPublishedAt %} at {{ article.getPublishedAt }} {% endif %}
+            <div class="descriptionRow">
+                <div class="descriptionColumn">{{ article.getDescription }}</div>
+                {% if article.getUrlToImage %}
+                    <div class="imageColumn">
+                        <img class="articleImage" src='{{ article.getUrlToImage }}' alt=''>
                     </div>
-                    <div class="descriptionRow">
-                        <div class="descriptionColumn">{{ article.getDescription }}</div>
-                        {% if article.getUrlToImage %}
-                            <div class="imageColumn">
-                                <img class="articleImage" src='{{ article.getUrlToImage }}' alt=''>
-                            </div>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endfor %}
-        {% endif %}
-    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+    {% endfor %}
 {% endblock %}
 
 {% block footer %}

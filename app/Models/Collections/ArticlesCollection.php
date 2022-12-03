@@ -10,7 +10,7 @@ class ArticlesCollection
     private array $articles;
     private int $articleCount;
 
-    public function __construct(array $articles, int $articleCount)
+    public function __construct(array $articles = [], int $articleCount = 0)
     {
         foreach ($articles as $key => $article) {
             if ($key === PAGE_SIZE) break;

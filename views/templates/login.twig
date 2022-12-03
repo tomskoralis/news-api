@@ -1,0 +1,26 @@
+{% extends 'base.twig' %}
+
+{% block title %}| Login{% endblock %}
+
+{% block content %}
+    <div class="userInputFormContainer">
+        <div class="pageTitle">Login</div>
+        <form class="userInputForm" action="/login" method="post">
+            <label class="userInputBoxLabel">E-mail:<br>
+                <input required class="userInputBox" type="email" name="email" value="{{ email }}">
+            </label><br>
+            <label class="userInputBoxLabel">Password:<br>
+                <input required class="userInputBox password" name="password" type="password">
+            </label><br>
+            <div class="registerButtonContainer">
+                <button class="submitButton">Login</button>
+            </div>
+        </form>
+        <br>
+        {% if loginErrorMessage %}
+            <div class="userInputError">
+                ERROR: {{ loginErrorMessage }}
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

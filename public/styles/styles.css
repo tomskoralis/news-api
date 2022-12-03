@@ -1,6 +1,6 @@
 * {
     box-sizing: border-box;
-    font-size: calc(8px + 0.5vw);
+    font-size: calc(5px + 0.7vw);
 }
 
 html, body {
@@ -17,63 +17,105 @@ a {
     color: #6080ff;
 }
 
+p {
+    display: block;
+    margin-block: 0;
+    margin-inline: 0;
+}
+
 #container {
     height: 100%;
-    padding-top: 3em;
+    padding-top: 4.2em;
     display: grid;
     justify-items: center;
     overflow-x: hidden;
     overflow-y: auto;
-    text-align: center;
+    text-align: left;
 }
 
 #top {
     background: #252525;
     width: 40em;
+    max-width: 40em;
+    min-width: 40em;
     position: fixed;
     top: 0;
-    height: 3em;
-    display: flex;
+    height: 4.2em;
     padding: 0.3em 1em;
+    border-bottom: 2px solid #ffffff;
 }
 
-#headerText {
-    flex-grow: 0.1;
-    font-size: calc(12px + 0.9vw);
-    text-align: center;
-    align-self: center;
-    align-content: center;
-    margin: 0 auto;
+#headerContainer {
+    display: flex;
+    height: 2.1em;
+    justify-content: space-between;
+}
+
+#topBar {
+    display: flex;
+    height: 1.5em;
+    justify-content: space-between;
+}
+
+#accountDisplay {
+    text-align: left;
+    max-width: 25em;
+    display: grid;
+    grid-template-columns: max-content 1fr max-content;
+}
+
+#userName {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 15em;
+    margin: 0 0.5em;
+}
+
+#searchResultCount {
+    font-size: calc(4px + 0.5vw);
+    text-align: right;
+}
+
+#headerLink {
+    color: #ffffff;
+    font-size: calc(8px + 1vw);
+    text-decoration: none;
 }
 
 #searchFormContainer {
-    flex-grow: 1;
-    text-align: right;
-    align-self: center;
+    width: 25em;
+    max-width: 30em;
+}
+
+#searchForm {
+    justify-items: right;
+    display: grid;
+    grid-template-columns: 1fr max-content;
+}
+
+#searchInput {
+    width: 100%;
+    max-width: 20em;
+    text-align: left;
+    height: 2em;
+    margin-right: 0.2em;
 }
 
 .submitButton {
+    color: #ffffff;
     background-image: linear-gradient(-180deg, #1D95C9 0%, #17759C 100%);
-    border-radius: 0.2em;
-    box-sizing: border-box;
-    color: #FFFFFF;
-    justify-content: center;
+    border: 0;
+    border-radius: 0.3em;
+    text-align: center;
     padding: 0.2em 1em;
     height: 2em;
-    border: 0;
     cursor: pointer;
     touch-action: manipulation;
-    margin: 0 auto;
 }
 
 .submitButton:hover {
     background-image: linear-gradient(-180deg, #37AEE2 0%, #1E96C8 100%);
-}
-
-#searchInput {
-    width: 70%;
-    text-align: left;
-    height: 2em;
 }
 
 #content {
@@ -85,7 +127,7 @@ a {
     padding: 0 1em;
 }
 
-#end {
+#bottom {
     background: #252525;
     height: 100%;
     width: 40em;
@@ -99,8 +141,8 @@ a {
 }
 
 .articleProperties {
+    font-size: calc(4px + 0.5vw);
     text-align: right;
-    font-size: calc(6px + 0.4vw);
     padding-bottom: 0.5em;
 }
 
@@ -116,6 +158,7 @@ a {
 .imageColumn {
     flex-grow: 1;
     padding-left: 1em;
+    text-align: right;
 }
 
 .articleImage {
@@ -150,4 +193,53 @@ pre {
     height: 2em;
     text-align: center;
     align-self: center;
+}
+
+.userInputFormContainer {
+    margin-top: 0.5em;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1em;
+    width: 25em;
+    border: 2px solid #707070;
+    border-radius: 0.5em;
+}
+
+.userInputForm {
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.pageTitle {
+    font-size: calc(7px + 0.9vw);
+    text-align: center;
+    margin-bottom: 0.5em;
+}
+
+.userInputBox {
+    width: 20em;
+    height: 1.4em;
+    margin-bottom: 0.7em;
+}
+
+.userInputError {
+    width: 100%;
+    margin-top: 0.5em;
+    padding: 0.5em;
+    color: #ff0000;
+    background: #ffdddd;
+    border: 1px solid #ff0000;
+    border-radius: 0.5em;
+}
+
+.registerButtonContainer {
+    text-align: center;
+}
+
+.dangerButton {
+    background-image: linear-gradient(-180deg, #c8511d 0%, #e16937 100%);
+}
+
+.dangerButton:hover {
+    background-image: linear-gradient(-180deg, #e26a36 0%, #e88a63 100%);
 }
