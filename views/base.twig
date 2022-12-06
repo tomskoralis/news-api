@@ -26,12 +26,12 @@
         </div>
         <div id="topBar">
             <div id="accountDisplay">
-                {% if session.id %}
+                {% if auth %}
                     <p>Welcome, </p>
-                    <p id="userName"><a href="/account">{{ getUsername(session.id) }}</a></p>
-                    <p><a href="/logout">Logout</a></p>
+                    <p id="userName"><a href="/account">{{ auth.name }}</a></p>
+                    <p><a href="/logout">Log out</a></p>
                 {% else %}
-                    <p><a href="/login">Login</a></p>
+                    <p><a href="/login">Log in</a></p>
                     <p id="userName"></p>
                     <p><a href="/register">Register</a></p>
                 {% endif %}
@@ -41,11 +41,7 @@
     </div>
 
     <div id="content">
-        {% if errorMessage %}
-            <pre>{{ errorMessage }}</pre>
-        {% else %}
-            {% block content %}{% endblock %}
-        {% endif %}
+        {% block content %}{% endblock %}
     </div>
 
     <div id="bottom">

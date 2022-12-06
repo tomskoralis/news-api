@@ -7,10 +7,10 @@
         <div class="pageTitle">Register account</div>
         <form class="userInputForm" action="/register" method="post">
             <label class="userInputBoxLabel">Username:<br>
-                <input required class="userInputBox" type="text" name="name" value="{{ name }}">
+                <input required class="userInputBox" name="name">
             </label><br>
             <label class="userInputBoxLabel">E-mail:<br>
-                <input required class="userInputBox" type="email" name="email" value="{{ email }}">
+                <input required class="userInputBox" name="email">
             </label><br>
             <label class="userInputBoxLabel">Password:<br>
                 <input required class="userInputBox password" name="password" type="password">
@@ -23,10 +23,10 @@
             </div>
         </form>
         <br>
-        {% if registerErrorMessage %}
+        {% for error in errors %}
             <div class="userInputError">
-                ERROR: {{ registerErrorMessage }}
+                ERROR: {{ error }}
             </div>
-        {% endif %}
+        {% endfor %}
     </div>
 {% endblock %}

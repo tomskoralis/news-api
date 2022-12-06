@@ -3,15 +3,17 @@
 {% block title %}| Account{% endblock %}
 
 {% block content %}
-
+    {% if errors.database %}
+        <div class="userInputError">ERROR: {{ errors.database }}</div>
+    {% endif %}
     <div class="userInputFormContainer">
         <div class="pageTitle">Edit Account</div>
         <form class="userInputForm" action="/update" method="post">
             <label class="userInputBoxLabel">Username:<br>
-                <input class="userInputBox" type="text" name="name" value="{{ name }}">
+                <input class="userInputBox" name="name" value="{{ auth.name }}">
             </label><br>
             <label class="userInputBoxLabel">E-mail:<br>
-                <input class="userInputBox" type="email" name="email" value="{{ email }}">
+                <input class="userInputBox" name="email" value="{{ auth.email }}">
             </label><br>
             <label class="userInputBoxLabel">Enter password to confirm:<br>
                 <input required class="userInputBox password" name="password" type="password">
@@ -20,10 +22,14 @@
                 <button class="submitButton">Save</button>
             </div>
         </form>
-        {% if updateErrorMessage %}
-            <div class="userInputError">
-                ERROR: {{ updateErrorMessage }}
-            </div>
+        {% if errors.name %}
+            <div class="userInputError">ERROR: {{ errors.name }}</div>
+        {% endif %}
+        {% if errors.email %}
+            <div class="userInputError">ERROR: {{ errors.email }}</div>
+        {% endif %}
+        {% if errors.passwordMatchingEdit %}
+            <div class="userInputError">ERROR: {{ errors.passwordMatchingEdit }}</div>
         {% endif %}
     </div>
 
@@ -43,15 +49,19 @@
                 <button class="submitButton">Save</button>
             </div>
         </form>
-        {% if passwordErrorMessage %}
-            <div class="userInputError">
-                ERROR: {{ passwordErrorMessage }}
-            </div>
+        {% if errors.passwordMatchingPassword %}
+            <div class="userInputError">ERROR: {{ errors.passwordMatchingPassword }}</div>
+        {% endif %}
+        {% if errors.password %}
+            <div class="userInputError">ERROR: {{ errors.password }}</div>
+        {% endif %}
+        {% if errors.passwordRepeated %}
+            <div class="userInputError">ERROR: {{ errors.passwordRepeated }}</div>
         {% endif %}
     </div>
 
     <div class="userInputFormContainer">
-        <div class="pageTitle">Delete Account </div>
+        <div class="pageTitle">Delete Account</div>
         <form class="userInputForm" action="/delete" method="post">
             <label class="userInputBoxLabel">Enter password to confirm:<br>
                 <input required class="userInputBox password" name="passwordForDeletion" type="password">
@@ -60,10 +70,8 @@
                 <button class="submitButton dangerButton">Delete Account</button>
             </div>
         </form>
-        {% if deleteErrorMessage %}
-            <div class="userInputError">
-                ERROR: {{ deleteErrorMessage }}
-            </div>
+        {% if errors.passwordMatchingDelete %}
+            <div class="userInputError">ERROR: {{ errors.passwordMatchingDelete }}</div>
         {% endif %}
     </div>
 

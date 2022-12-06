@@ -2,39 +2,20 @@
 
 namespace App\Controllers;
 
-use App\Template;
+use App\{Database, Redirect, Template, Validation};
 use App\Models\User;
-use App\Services\InputValidationService;
-use function App\loadUserService;
 
 class UserUpdateController
 {
     public function displayAccount(): Template
     {
-        if (!isset($_SESSION["id"])) {
-            return new Template("base.twig", [
-                "errorMessage" => "Not logged in!",
-            ]);
-        }
-
-        $database = loadUserService();
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/account.twig", [
-                "errorMessage" => $database->getErrorMessage(),
-            ]);
-        }
-
-        return new Template("templates/account.twig", [
-            "name" => $database->getNameFromId($_SESSION["id"]),
-            "email" => $database->getEmailFromId($_SESSION["id"]),
-        ]);
+        return new Template("templates/account.twig");
     }
 
-    public function update(): Template
+    public function update(): Redirect
     {
-        if (!isset($_SESSION["id"])) {
-            header("Location: /login");
-            exit();
+        if (!isset($_SESSION["userId"])) {
+            return new Redirect("/login");
         }
 
         $password = $_POST["password"] ?? "";
@@ -42,43 +23,27 @@ class UserUpdateController
         $email = $_POST["email"] ?? "";
         $user = new User($password, $email, $name);
 
-        $userValidate = new InputValidationService($user);
-        if (!$userValidate->nameValid() ||
-            !$userValidate->emailValid() ||
-            !$userValidate->passwordValid()
+        $validation = new Validation($user);
+        if (
+            !$validation->isNameValid() ||
+            !$validation->isEmailValid() ||
+            !$validation->isEmailTaken($_SESSION["userId"]) ||
+            !$validation->isPasswordMatchingHash($_SESSION["userId"], "Edit")
         ) {
-            return new Template("templates/account.twig", [
-                "updateErrorMessage" => $userValidate->getErrorMessage(),
-                "name" => $name,
-                "email" => $email,
-            ]);
+            return new Redirect("/account");
         }
 
-        $database = loadUserService();
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/account.twig", [
-                "errorMessage" => $database->getErrorMessage(),
-            ]);
+        Database::update($user, $_SESSION["userId"]);
+        if (!empty($_SESSION["errors"])) {
+            return new Redirect("/account");
         }
-
-        $database->update($_SESSION["id"], $user);
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/account.twig", [
-                "updateErrorMessage" => $database->getErrorMessage(),
-                "name" => $name,
-                "email" => $email,
-            ]);
-        }
-
-        header("Location: /");
-        exit();
+        return new Redirect("/");
     }
 
-    public function updatePassword(): Template
+    public function updatePassword(): Redirect
     {
-        if (!isset($_SESSION["id"])) {
-            header("Location: /login");
-            exit();
+        if (!isset($_SESSION["userId"])) {
+            return new Redirect("/login");
         }
 
         $passwordCurrent = $_POST["passwordCurrent"] ?? "";
@@ -87,64 +52,44 @@ class UserUpdateController
         $newUser = new User($passwordNew, "", "", $passwordNewRepeated);
         $user = new User($passwordCurrent);
 
-        $database = loadUserService();
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/account.twig", [
-                "errorMessage" => $database->getErrorMessage(),
-            ]);
+        $validationNew = new Validation($newUser);
+        $validation = new Validation($user);
+        if (
+            !$validationNew->isPasswordValid() ||
+            !$validationNew->isPasswordRepeatedValid() ||
+            !$validation->isPasswordMatchingHash($_SESSION["userId"], "Password")
+        ) {
+            return new Redirect("/account");
+        }
+        Database::updatePassword($newUser, $_SESSION["userId"]);
+        if (!empty($_SESSION["errors"])) {
+            return new Redirect("/account");
         }
 
-        $userValidate = new InputValidationService($newUser);
-        if (!$userValidate->passwordValid() || !$userValidate->passwordRepeatedValid()) {
-            return new Template("templates/account.twig", [
-                "passwordErrorMessage" => $userValidate->getErrorMessage(),
-                "name" => $database->getNameFromId($_SESSION["id"]),
-                "email" => $database->getEmailFromId($_SESSION["id"]),
-            ]);
-        }
-
-
-        $database->updatePassword($_SESSION["id"], $user, $newUser);
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/account.twig", [
-                "passwordErrorMessage" => $database->getErrorMessage(),
-                "name" => $database->getNameFromId($_SESSION["id"]),
-                "email" => $database->getEmailFromId($_SESSION["id"]),
-            ]);
-        }
-
-        header("Location: /");
-        exit();
+        return new Redirect("/");
     }
 
-    public function delete(): Template
+    public function delete(): Redirect
     {
-        if (!isset($_SESSION["id"])) {
-            header("Location: /login");
-            exit();
+        if (!isset($_SESSION["userId"])) {
+            return new Redirect("/login");
         }
+
         $passwordForDeletion = $_POST["passwordForDeletion"] ?? "";
         $user = new User($passwordForDeletion);
 
-        $database = loadUserService();
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/account.twig", [
-                "errorMessage" => $database->getErrorMessage(),
-            ]);
+        $validation = new Validation($user);
+        if (!$validation->isPasswordMatchingHash($_SESSION["userId"], "Delete")) {
+            return new Redirect("/account");
         }
 
-        $database->deleteUser($_SESSION["id"], $user);
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/account.twig", [
-                "deleteErrorMessage" => $database->getErrorMessage(),
-                "name" => $database->getNameFromId($_SESSION["id"]),
-                "email" => $database->getEmailFromId($_SESSION["id"]),
-            ]);
+        Database::delete($_SESSION["userId"]);
+        if (!empty($_SESSION["errors"])) {
+            return new Redirect("/account");
         }
 
-        unset($_SESSION["id"]);
-        header("Location: /");
-        exit();
+        unset($_SESSION["userId"]);
+        return new Redirect("/");
     }
 
 }

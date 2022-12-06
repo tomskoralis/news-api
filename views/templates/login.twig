@@ -7,7 +7,7 @@
         <div class="pageTitle">Login</div>
         <form class="userInputForm" action="/login" method="post">
             <label class="userInputBoxLabel">E-mail:<br>
-                <input required class="userInputBox" type="email" name="email" value="{{ email }}">
+                <input required class="userInputBox" name="email">
             </label><br>
             <label class="userInputBoxLabel">Password:<br>
                 <input required class="userInputBox password" name="password" type="password">
@@ -17,10 +17,10 @@
             </div>
         </form>
         <br>
-        {% if loginErrorMessage %}
+        {% for error in errors %}
             <div class="userInputError">
-                ERROR: {{ loginErrorMessage }}
+                ERROR: {{ error }}
             </div>
-        {% endif %}
+        {% endfor %}
     </div>
 {% endblock %}

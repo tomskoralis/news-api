@@ -2,12 +2,14 @@
 
 ### Instructions to run the News API website:
 
-1. Copy the `.env.example` and rename it to `.env`.
-2. Put your newsapi.org API key between the `""` in the same line as `NEWS_API_KEY`.
-3. Create a new database that has users table with `id`, `name`, `email`, and `password` columns.
+1. Make a copy of the `.env.example` and rename it to `.env`.
+2. Enter your newsapi.org API key in the `.env` file.
+3. Create a new mySQL 8.0 database that has users table with `id`, `name`, `email`, and `password` columns.
     - `id` must auto-increment and `email` must be unique to the table.
-4. Put your `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD`, `DATABASE_HOST`, `DATABASE_DRIVER` in the `.env`
+4. Enter your database credentials in the `.env`
    file.
-    - `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD` are all required.
+    - `DATABASE_NAME`, `DATABASE_USER`, `DATABASE_PASSWORD` are required.
     - `DATABASE_HOST` is localhost by default and `DATABASE_DRIVER` is pdo_mysql by default.
-5. Run the website from the `public` directory.
+5. Test the website by running it from the `public` directory using the command: 
+```
+php -S localhost:8000

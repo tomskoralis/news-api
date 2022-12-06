@@ -2,65 +2,39 @@
 
 namespace App\Controllers;
 
-use App\Template;
+use App\{Database, Redirect, Template, Validation};
 use App\Models\User;
-use App\Services\InputValidationService;
-use function App\loadUserService;
 
 class UserLoginController
 {
     public function displayLoginForm(): Template
     {
-        if (isset($_SESSION["id"])) {
-            header("Location: /");
-            exit();
-        }
         return new Template("templates/login.twig");
     }
 
-    public function login(): Template
+    public function login(): Redirect
     {
         $password = $_POST["password"] ?? "";
         $email = $_POST["email"] ?? "";
         $user = new User($password, $email);
 
-        $userValidate = new InputValidationService($user);
-        if (!$userValidate->emailValid() || !$userValidate->passwordValid()) {
-            return new Template("templates/login.twig", [
-                "loginErrorMessage" => $userValidate->getErrorMessage(),
-                "email" => $email,
-            ]);
+        $id = Database::searchId($user);
+        $validation = new Validation($user);
+        if (
+            !$validation->isEmailValid() ||
+            !$validation->isPasswordValid() ||
+            !$validation->isPasswordMatchingHash($id)
+        ) {
+            return new Redirect("/login");
         }
 
-        $database = loadUserService();
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/login.twig", [
-                "errorMessage" => $database->getErrorMessage(),
-            ]);
-        }
-
-        $id = $database->authenticate($user);
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/login.twig", [
-                "loginErrorMessage" => $database->getErrorMessage(),
-                "email" => $email,
-            ]);
-        }
-
-        $_SESSION["id"] = $id;
-        header("Location: /");
-        exit();
+        $_SESSION["userId"] = $id;
+        return new Redirect("/");
     }
 
-    public function logout(): Template
+    public function logout(): Redirect
     {
-        if (isset($_SESSION["id"])) {
-            unset($_SESSION["id"]);
-            header("Location: /");
-            exit();
-        }
-        return new Template("templates/logout.twig", [
-            "errorMessage" => "Not logged in!",
-        ]);
+        unset($_SESSION["userId"]);
+        return new Redirect("/");
     }
 }

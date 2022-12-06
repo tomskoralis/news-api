@@ -2,12 +2,10 @@
 
 namespace App;
 
-use App\Services\TwigService;
 use FastRoute\{Dispatcher, RouteCollector};
 use function FastRoute\simpleDispatcher;
 
 require_once 'routes.php';
-require_once 'functions.php';
 
 class Router
 {
@@ -34,12 +32,12 @@ class Router
         $routeInfo = $this->dispatcher->dispatch($httpMethod, $uri);
         switch ($routeInfo[0]) {
             case Dispatcher::NOT_FOUND:
-                (new TwigService())->renderTemplate(
+                Twig::renderTemplate(
                     new Template("templates/404.twig")
                 );
                 break;
             case Dispatcher::METHOD_NOT_ALLOWED:
-                (new TwigService())->renderTemplate(
+                Twig::renderTemplate(
                     new Template("templates/405.twig", [
                         "allowedMethods" => $routeInfo[1],
                     ])
@@ -50,8 +48,14 @@ class Router
                 $vars = $routeInfo[2];
                 [$controller, $method] = $handler;
                 $response = (new $controller)->{$method}($vars);
+//                echo "<pre>"; var_dump($_SESSION);
                 if ($response instanceof Template) {
-                    (new TwigService())->renderTemplate($response);
+                    Twig::renderTemplate($response);
+                    unset($_SESSION["errors"]);
+                }
+                if ($response instanceof Redirect) {
+                    header("Location: " . $response->getUrl());
+                    exit();
                 }
                 break;
         }

@@ -2,23 +2,17 @@
 
 namespace App\Controllers;
 
-use App\Template;
+use App\{Database, Redirect, Template, Validation};
 use App\Models\User;
-use App\Services\InputValidationService;
-use function App\loadUserService;
 
 class UserRegisterController
 {
     public function displayRegisterForm(): Template
     {
-        if (isset($_SESSION["id"])) {
-            header("Location: /");
-            exit();
-        }
         return new Template("templates/register.twig");
     }
 
-    public function store(): Template
+    public function store(): Redirect
     {
         $password = $_POST["password"] ?? "";
         $email = $_POST["email"] ?? "";
@@ -26,35 +20,21 @@ class UserRegisterController
         $passwordRepeated = $_POST["passwordRepeated"] ?? "";
         $user = new User($password, $email, $name, $passwordRepeated);
 
-        $userValidate = new InputValidationService($user);
-        if (!$userValidate->nameValid() ||
-            !$userValidate->emailValid() ||
-            !$userValidate->passwordValid() ||
-            !$userValidate->passwordRepeatedValid()
+        $validation = new Validation($user);
+        if (
+            !$validation->isNameValid() ||
+            !$validation->isEmailValid() ||
+            !$validation->isPasswordValid() ||
+            !$validation->isPasswordRepeatedValid() ||
+            !$validation->isEmailTaken()
         ) {
-            return new Template("templates/register.twig", [
-                "registerErrorMessage" => $userValidate->getErrorMessage(),
-                "name" => $name,
-                "email" => $email,
-            ]);
+            return new Redirect("/register");
         }
 
-        $database = loadUserService();
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/register.twig", [
-                "errorMessage" => $database->getErrorMessage(),
-            ]);
+        Database::insert($user);
+        if (!empty($_SESSION["errors"])) {
+            return new Redirect("/register");
         }
-        $database->insert($user);
-        if ($database->getErrorMessage() !== "") {
-            return new Template("templates/register.twig", [
-                "registerErrorMessage" => $database->getErrorMessage(),
-                "name" => $name,
-                "email" => $email,
-            ]);
-        }
-
-        header("Location: /login");
-        exit();
+        return new Redirect("/login");
     }
 }
